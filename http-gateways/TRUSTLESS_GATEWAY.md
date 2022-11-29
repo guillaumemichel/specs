@@ -27,6 +27,8 @@ The minimal implementation means:
 - [HTTP API](#http-api)
   - [`GET /ipfs/{cid}[?{params}]`](#get-ipfscidparams)
   - [`HEAD /ipfs/{cid}[?{params}]`](#head-ipfscidparams)
+  - [`GET /ipns/{key}[?{params}]`](#get-ipnskeyparams)
+  - [`HEAD /ipns/{key}[?{params}]`](#head-ipnskeyparams)
 - [HTTP Request](#http-request)
   - [HTTP Request Headers](#http-request-headers)
     - [`Accept` (request header)](#accept-request-header)
@@ -46,6 +48,14 @@ Downloads data at specified CID.
 
 Same as GET, but does not return any payload.
 
+## `GET /ipns/{key}[?{params}]`
+
+Downloads data at specified IPNS Key.
+
+## `HEAD /ipns/{key}[?{params}]`
+
+same as GET, but does not return any payload.
+
 # HTTP Request
 
 Same as in [PATH_GATEWAY.md](./PATH_GATEWAY.md#http-request), but with limited number of supported response types.
@@ -63,6 +73,7 @@ Below response types MUST to be supported:
 
 - [application/vnd.ipld.raw](https://www.iana.org/assignments/media-types/application/vnd.ipld.raw) – requests a single, verifiable raw block to be returned
 - [application/vnd.ipld.car](https://www.iana.org/assignments/media-types/application/vnd.ipld.car) – disables IPLD/IPFS deserialization, requests a verifiable CAR stream to be returned
+- [application/vnd.ipfs.ipld-record](https://www.iana.org/assignments/media-types/application/vnd.ipfs.ipld-record) – requests a verifiable IPNS record.
 
 # HTTP Response
 

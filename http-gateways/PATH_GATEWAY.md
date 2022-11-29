@@ -182,6 +182,7 @@ For example:
 - [application/vnd.ipld.raw](https://www.iana.org/assignments/media-types/application/vnd.ipld.raw) – disables [IPLD codec deserialization](https://ipld.io/docs/codecs/), requests a verifiable raw [block](https://docs.ipfs.io/concepts/glossary/#block) to be returned
 - [application/vnd.ipld.car](https://www.iana.org/assignments/media-types/application/vnd.ipld.car) – disables [IPLD codec deserialization](https://ipld.io/docs/codecs/), requests a verifiable [CAR](https://docs.ipfs.io/concepts/glossary/#car) stream to be returned
 - [application/x-tar](https://en.wikipedia.org/wiki/Tar_(computing)) – returns UnixFS tree (files and directories) as a [TAR](https://en.wikipedia.org/wiki/Tar_(computing)) stream. Returned tree starts at a root item which name is the same as the requested CID. Produces 400 Bad Request for content that is not UnixFS.
+- [application/vnd.ipfs.ipns-record](https://www.iana.org/assignments/media-types/application/vnd.ipfs.ipns-record) – requests a verifiable [IPNS Record](../ipns/IPNS.md#ipns-record) to be returned. Produces 400 Bad Request if the content is not under the IPNS namespace, or contains a path.
 <!-- TODO: https://github.com/ipfs/go-ipfs/issues/8823
 - application/vnd.ipld.dag-json OR application/json – requests IPLD Data Model representation serialized into [DAG-JSON format](https://ipld.io/docs/codecs/known/dag-json/)
 - application/vnd.ipld.dag-cbor OR application/cbor - requests IPLD Data Model representation serialized into [DAG-CBOR format](https://ipld.io/docs/codecs/known/dag-cbor/)
@@ -246,11 +247,12 @@ parameter, if present)
 
 Optional, `format=<format>` can be used to request specific response format.
 
-This is a URL-friendly alternative to sending
-`Accept: application/vnd.ipld.<format>` header, see [`Accept`](#accept-request-header)
-for more details.
-
-In case of `Accept: application/x-tar`, the `?format=` equivalent is `tar`.
+This is a URL-friendly alternative to sending an [`Accept`](#accept-request-header) header.
+These are the equivalents:
+- `format=raw` → `Accept: application/vnd.ipld.raw`
+- `format=car` → `Accept: application/vnd.ipld.car`
+- `format=tar` → `Accept: application/x-tar`
+- `format=ipns-record` → `Accept: application/vnd.ipfs.ipns-record`
 
 <!-- TODO Planned: https://github.com/ipfs/go-ipfs/issues/8769
 - `selector=<cid>`  can be used for passing a CID with [IPLD selector](https://ipld.io/specs/selectors)
@@ -375,6 +377,8 @@ and CDNs, implementations should base it on both CID and response type:
 - When responding to [`Range`](#range-request-header) request, a strong `Etag`
   should be based on requested range in addition to CID and response format:
   `Etag: "bafy..foo.0-42`
+
+TODO: IPNS RECORDS
 
 ### `Cache-Control` (response header)
 
@@ -598,6 +602,8 @@ Data sent with HTTP response depends on the type of requested IPFS resource:
   - Arbitrary DAG as a verifiable CAR file or a stream, see [application/vnd.ipld.car](https://www.iana.org/assignments/media-types/application/vnd.ipld.car)
 - TAR
   - Deserialized UnixFS files and directories as a TAR file or a stream, see [application/x-tar](https://en.wikipedia.org/wiki/Tar_(computing))
+- IPNS Record
+  - Protobuf bytes representing a verifiable [IPNS Record](../ipns/IPNS.md#ipns-record)
 <!-- TODO: https://github.com/ipfs/go-ipfs/issues/8823
 - dag-json / dag-cbor
   - See [https://github.com/ipfs/go-ipfs/issues/8823](https://github.com/ipfs/go-ipfs/issues/8823)
